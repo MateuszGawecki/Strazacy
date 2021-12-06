@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 public class Jrg implements Observer{
@@ -38,6 +39,7 @@ public class Jrg implements Observer{
 
     @Override
     public void update(MyEvent event, int numberOfCars) {
+        boolean isReal = new Random().nextInt(100) < 5;
 
         for (Car car: cars) {
             if(numberOfCars == 0) break;
@@ -46,7 +48,7 @@ public class Jrg implements Observer{
                 car.setFree(false);
                 numberOfCars--;
                 System.out.println("Dzialam: "+ car.getId() + " Zdarzenie id: " + event.getId());
-                new Thread( () -> car.make(event)).start();
+                new Thread( () -> car.make(isReal)).start();
             }
 
         }

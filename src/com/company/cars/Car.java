@@ -12,33 +12,31 @@ import java.util.concurrent.TimeUnit;
 public class Car {
     private int id;
     private boolean isFree;
-    private int counter;
 
     public Car() {
         idx id = new idx();
         this.id = id.getId();
         this.isFree = true;
-        this.counter = 0;
     }
 
-    public void make(MyEvent event){
+    public void make(boolean isReal){
 
-        //System.out.println("Dzialam: "+ this.getId());
         this.setFree(false);
+        Random random = new Random();
+
         try {
-            TimeUnit.SECONDS.sleep(new Random().nextInt(10));
+            TimeUnit.SECONDS.sleep(random.nextInt(4));
+
+            if(isReal){
+                TimeUnit.SECONDS.sleep(random.nextInt(20) + 5);
+            }
+
+            TimeUnit.SECONDS.sleep(random.nextInt(4));
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("Skonczylem: "+ this.getId());
         this.setFree(true);
-
-//        if(counter < 31){
-//            counter++;
-//        }
-//        else{
-//            counter = 0;
-//            setFree(true);
-//        }
     }
 }
