@@ -39,9 +39,8 @@ public class Main {
 
         //komendant.notifyObservers(new MyEvent());
         for(;;){
-            //TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(500);
             if(!komendant.notifyObservers(new MyEvent())) break;
         }
-
     }
 }

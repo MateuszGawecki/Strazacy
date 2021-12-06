@@ -24,6 +24,7 @@ public class Car {
     public void make(MyEvent event){
 
         //System.out.println("Dzialam: "+ this.getId());
+        this.setFree(false);
         try {
             TimeUnit.SECONDS.sleep(new Random().nextInt(10));
         } catch (InterruptedException e) {

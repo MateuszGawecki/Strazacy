@@ -40,14 +40,13 @@ public class Jrg implements Observer{
     public void update(MyEvent event, int numberOfCars) {
 
         for (Car car: cars) {
+            if(numberOfCars == 0) break;
 
             if(car.isFree()){
                 car.setFree(false);
                 numberOfCars--;
                 System.out.println("Dzialam: "+ car.getId() + " Zdarzenie id: " + event.getId());
                 new Thread( () -> car.make(event)).start();
-
-                if(numberOfCars == 0) break;
             }
 
         }

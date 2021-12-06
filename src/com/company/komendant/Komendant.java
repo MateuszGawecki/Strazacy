@@ -46,7 +46,7 @@ public class Komendant implements Subject{
 
         int neededCars = event.isPozar() ? 5 : 3;
 
-        System.out.println(event.isPozar() ? "Pozar" + event.getId() : "Miejscowe zagrozenie" + event.getId());
+        System.out.println(event.isPozar() ? "Pozar: " + event.getId() + " neededCars: " + neededCars : "Miejscowe zagrozenie: " + event.getId() + " neededCars: " + neededCars);
 
 
         for(Jrg jrg : dists.keySet()){
@@ -57,8 +57,10 @@ public class Komendant implements Subject{
                 break;
             }else{
                 //System.out.println("Czesc Jgr:  " + jrg.getId());
-                jrg.update(event,jrg.getFreeCarsCount());
                 neededCars -= jrg.getFreeCarsCount();
+                jrg.update(event,jrg.getFreeCarsCount());
+
+                //System.out.println("Wiadomosc debagiera: "+neededCars);
             }
         }
 
