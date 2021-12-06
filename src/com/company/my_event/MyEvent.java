@@ -1,15 +1,21 @@
 package com.company.my_event;
 
+import com.company.my_event.states.Fire;
+import com.company.my_event.states.LocalDanger;
+import com.company.my_event.states.State;
 import lombok.Getter;
 
 import java.util.Random;
 
 @Getter
-public class MyEvent {
+public class MyEvent implements State{
     private int id;
-    private boolean pozar;
+//    private boolean pozar;
+    private State state;
     private double x;
     private double y;
+
+
 
     public MyEvent() {
         double maxX = 50.154564013341734;
@@ -23,9 +29,18 @@ public class MyEvent {
 
         Random random = new Random();
 
-        this.pozar= random.nextInt(10) < 3;
+        if(random.nextInt(10) < 3){
+            this.state = new Fire();
+        }else{
+            this.state = new LocalDanger();
+        }
 
         this.x = random.nextDouble() * (maxX-minX) + minX;
         this.y = random.nextDouble() * (maxY-minY) + minY;
+    }
+
+    @Override
+    public boolean doAction() {
+        return this.getState().doAction();
     }
 }

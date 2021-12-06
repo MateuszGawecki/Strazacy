@@ -2,6 +2,9 @@ package com.company.komendant;
 
 import com.company.jrg.Jrg;
 import com.company.jrg.Observer;
+import com.company.komendant.strategy.LocalDangerStrategy;
+import com.company.komendant.strategy.PozarStrategy;
+import com.company.komendant.strategy.Strategy;
 import com.company.my_event.MyEvent;
 
 import java.util.*;
@@ -44,19 +47,18 @@ public class Komendant implements Subject{
 
         sortByValue(dists);
 
-        int neededCars = event.isPozar() ? 5 : 3;
+        //int neededCars = event.doAction() ? 5 : 3;
+        int neededCars = doOperation(event);
 
-        System.out.println(event.isPozar() ? "Pozar: " + event.getId() + " neededCars: " + neededCars : "Miejscowe zagrozenie: " + event.getId() + " neededCars: " + neededCars);
+        System.out.println(event.doAction() ? "Pozar: " + event.getId() + " neededCars: " + neededCars : "Miejscowe zagrozenie: " + event.getId() + " neededCars: " + neededCars);
 
 
         for(Jrg jrg : dists.keySet()){
             if(jrg.getFreeCarsCount()>= neededCars){
-                //System.out.println("Calosc Jgr:  " + jrg.getId());
                 jrg.update(event,neededCars);
                 neededCars = 0;
                 break;
             }else{
-                //System.out.println("Czesc Jgr:  " + jrg.getId());
                 neededCars -= jrg.getFreeCarsCount();
                 jrg.update(event,jrg.getFreeCarsCount());
 
@@ -73,7 +75,7 @@ public class Komendant implements Subject{
         return sqrt(pow((jrg.getX() - event.getX()),2) + pow((jrg.getY() - event.getY()),2));
     }
 
-    //Zjebane z neta
+    //Skopiowane z neta
     public HashMap<Jrg, Double> sortByValue(HashMap<Jrg, Double> hm)
     {
         // Create a list from elements of HashMap
@@ -94,5 +96,13 @@ public class Komendant implements Subject{
             temp.put(aa.getKey(), aa.getValue());
         }
         return temp;
+    }
+
+    public int doOperation(MyEvent event) {
+        if(event.getState().doAction()){
+            return new PozarStrategy().doOperation();
+        }else{
+            return new LocalDangerStrategy().doOperation();
+        }
     }
 }
