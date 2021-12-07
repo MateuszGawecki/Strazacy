@@ -4,7 +4,6 @@ import com.company.jrg.Jrg;
 import com.company.jrg.Observer;
 import com.company.komendant.strategy.LocalDangerStrategy;
 import com.company.komendant.strategy.PozarStrategy;
-import com.company.komendant.strategy.Strategy;
 import com.company.my_event.MyEvent;
 
 import java.util.*;
@@ -33,11 +32,6 @@ public class Komendant implements Subject{
     }
 
     @Override
-    public void notifyObserver(Observer o, MyEvent event) {
-
-    }
-
-    @Override
     public boolean notifyObservers(MyEvent event) {
         HashMap<Jrg, Double> dists = new HashMap<>();
 
@@ -47,22 +41,22 @@ public class Komendant implements Subject{
 
         sortByValue(dists);
 
-        //int neededCars = event.doAction() ? 5 : 3;
         int neededCars = doOperation(event);
 
-        System.out.println(event.doAction() ? "Pozar: " + event.getId() + " neededCars: " + neededCars : "Miejscowe zagrozenie: " + event.getId() + " neededCars: " + neededCars);
+        System.out.println(event.doAction()
+                ? "Pozar: " + event.getId() + " neededCars: " + neededCars
+                : "Miejscowe zagrozenie: " + event.getId() + " neededCars: " + neededCars);
 
+        boolean isReal = new Random().nextInt(100) < 5;
 
         for(Jrg jrg : dists.keySet()){
             if(jrg.getFreeCarsCount()>= neededCars){
-                jrg.update(event,neededCars);
+                jrg.update(event,neededCars, isReal);
                 neededCars = 0;
                 break;
             }else{
                 neededCars -= jrg.getFreeCarsCount();
-                jrg.update(event,jrg.getFreeCarsCount());
-
-                //System.out.println("Wiadomosc debagiera: "+neededCars);
+                jrg.update(event,jrg.getFreeCarsCount(), isReal);
             }
         }
 
@@ -75,7 +69,15 @@ public class Komendant implements Subject{
         return sqrt(pow((jrg.getX() - event.getX()),2) + pow((jrg.getY() - event.getY()),2));
     }
 
-    //Skopiowane z neta
+    public int doOperation(MyEvent event) {
+        if(event.getState().doAction()){
+            return new PozarStrategy().doOperation();
+        }else{
+            return new LocalDangerStrategy().doOperation();
+        }
+    }
+
+    //Sortowanie mapy po value
     public HashMap<Jrg, Double> sortByValue(HashMap<Jrg, Double> hm)
     {
         // Create a list from elements of HashMap
@@ -96,13 +98,5 @@ public class Komendant implements Subject{
             temp.put(aa.getKey(), aa.getValue());
         }
         return temp;
-    }
-
-    public int doOperation(MyEvent event) {
-        if(event.getState().doAction()){
-            return new PozarStrategy().doOperation();
-        }else{
-            return new LocalDangerStrategy().doOperation();
-        }
     }
 }

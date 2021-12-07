@@ -38,8 +38,7 @@ public class Jrg implements Observer{
     }
 
     @Override
-    public void update(MyEvent event, int numberOfCars) {
-        boolean isReal = new Random().nextInt(100) < 5;
+    public void update(MyEvent event, int numberOfCars, boolean isReal) {
 
         for (Car car: cars) {
             if(numberOfCars == 0) break;

@@ -10,9 +10,10 @@ public class Simulation {
         Komendant komendant = new Komendant();
         Prepare.prepare(komendant);
 
-        for(;;){
+        do {
             TimeUnit.SECONDS.sleep(1); // częstośc zgłoszeń
-            if(!komendant.notifyObservers(new MyEvent())) break;
-        }
+        } while (komendant.notifyObservers(new MyEvent()));
+
+        System.out.println("\n\tSymulacja zakończona - brak wozów!");
     }
 }
