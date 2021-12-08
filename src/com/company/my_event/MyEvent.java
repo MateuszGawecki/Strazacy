@@ -23,7 +23,7 @@ public class MyEvent implements State{
         double maxY = 20.02470275868903;
         double minY = 19.688292482742394;
 
-        Idx idx = new Idx();
+        IdxEvent idx = new IdxEvent();
 
         this.id= idx.getId();
 

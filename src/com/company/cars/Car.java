@@ -1,6 +1,5 @@
 package com.company.cars;
 
-import com.company.my_event.MyEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +13,7 @@ public class Car {
     private boolean isFree;
 
     public Car() {
-        idx id = new idx();
+        IdxCar id = new IdxCar();
         this.id = id.getId();
         this.isFree = true;
     }

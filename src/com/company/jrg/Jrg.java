@@ -10,6 +10,7 @@ import java.util.Random;
 
 @Getter
 public class Jrg implements Observer{
+    private String name;
     private int id;
     private double x;
     private double y;
@@ -26,10 +27,11 @@ public class Jrg implements Observer{
         return count;
     }
 
-    public Jrg(double x, double y, int id) {
+    public Jrg(double x, double y, int id, String name) {
         this.id = id;
         this.x = x;
         this.y = y;
+        this.name=name;
         this.cars = new ArrayList<>();
 
         for(int i=0; i<5; i++){
