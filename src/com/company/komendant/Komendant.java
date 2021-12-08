@@ -33,25 +33,23 @@ public class Komendant implements Subject{
 
     @Override
     public boolean notifyObservers(MyEvent event) {
-        HashMap<Jrg, Double> dists = new HashMap<>();
+        HashMap<Jrg, Double> dists = prepareDists(event);
 
-        for(Observer observer : observers){
-            dists.put((Jrg) observer, getDist(observer,event));
-        }
+        int neededCars = getStrategy(event);
 
-        sortByValue(dists);
+        printInfo(event, neededCars);
 
-        int neededCars = doOperation(event);
+        boolean isReal = reality();
 
-        System.out.println(event.doAction()
-                ? "Pozar: " + event.getId() + " neededCars: " + neededCars
-                : "Miejscowe zagrozenie: " + event.getId() + " neededCars: " + neededCars);
+        neededCars = performAction(event, dists, neededCars, isReal);
 
-        boolean isReal = new Random().nextInt(100) < 5;
+        return neededCars == 0; // dla zakończenia programu
+    }
 
+    private int performAction(MyEvent event, HashMap<Jrg, Double> dists, int neededCars, boolean isReal) {
         for(Jrg jrg : dists.keySet()){
             if(jrg.getFreeCarsCount()>= neededCars){
-                jrg.update(event,neededCars, isReal);
+                jrg.update(event, neededCars, isReal);
                 neededCars = 0;
                 break;
             }else{
@@ -59,8 +57,32 @@ public class Komendant implements Subject{
                 jrg.update(event,jrg.getFreeCarsCount(), isReal);
             }
         }
+        return neededCars;
+    }
 
-        return neededCars == 0;
+    private boolean reality() {
+        return new Random().nextInt(100) < 5;
+    }
+
+    private void printInfo(MyEvent event, int neededCars) {
+        System.out.println(event.doAction()
+                ? "Pozar: " + event.getId() + " neededCars: " + neededCars
+                : "Miejscowe zagrozenie: " + event.getId() + " neededCars: " + neededCars);
+    }
+
+    private HashMap<Jrg, Double> prepareDists(MyEvent event) {
+        HashMap<Jrg, Double> dists = new HashMap<>();
+
+        generateDists(event, dists);
+        return dists;
+    }
+
+    private void generateDists(MyEvent event, HashMap<Jrg, Double> dists) {
+        for(Observer observer : observers){
+            dists.put((Jrg) observer, getDist(observer, event));
+        }
+
+        sortByValue(dists);
     }
 
     private double getDist(Observer observer, MyEvent event){
@@ -69,7 +91,7 @@ public class Komendant implements Subject{
         return sqrt(pow((jrg.getX() - event.getX()),2) + pow((jrg.getY() - event.getY()),2));
     }
 
-    public int doOperation(MyEvent event) {
+    private int getStrategy(MyEvent event) {
         if(event.getState().doAction()){
             return new PozarStrategy().doOperation();
         }else{
@@ -78,7 +100,7 @@ public class Komendant implements Subject{
     }
 
     //Sortowanie mapy po value
-    public HashMap<Jrg, Double> sortByValue(HashMap<Jrg, Double> hm)
+    private HashMap<Jrg, Double> sortByValue(HashMap<Jrg, Double> hm)
     {
         // Create a list from elements of HashMap
         List<Map.Entry<Jrg, Double> > list
